@@ -78,4 +78,8 @@ public class UserService {
                 });
     userRepository.deleteById(user.getId());
   }
+
+    public UserResponseDto getUserByUsername(String username) {
+        return null;
+    }
 }
