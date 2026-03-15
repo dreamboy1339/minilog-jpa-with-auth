@@ -12,6 +12,8 @@ import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Set;
+
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -53,4 +55,6 @@ public class User {
       orphanRemoval = true,
       fetch = FetchType.LAZY)
   private List<Article> articles;
+
+  private Set<Role> roles;
 }
