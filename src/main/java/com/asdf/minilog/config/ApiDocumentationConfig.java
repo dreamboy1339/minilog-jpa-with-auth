@@ -8,13 +8,13 @@ import org.springframework.context.annotation.Configuration;
 @Configuration
 public class ApiDocumentationConfig {
 
-  @Bean
-  public OpenAPI customOpenAPI() {
-    return new OpenAPI()
-        .info(
-            new Info()
-                .title("MiniLog API")
-                .version("1.0.0")
-                .description("API documentation for MiniLog application"));
-  }
+    @Bean
+    public OpenAPI customOpenAPI() {
+        return new OpenAPI()
+            .info(
+                new Info()
+                    .title("MiniLog API")
+                    .version("1.0.0")
+                    .description("API documentation for MiniLog application"));
+    }
 }

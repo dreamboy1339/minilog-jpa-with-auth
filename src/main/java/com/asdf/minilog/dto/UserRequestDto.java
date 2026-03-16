@@ -8,7 +8,9 @@ import lombok.NonNull;
 @Builder
 public class UserRequestDto {
 
-  @NonNull private String username;
+    @NonNull
+    private String username;
 
-  @NonNull private String password;
+    @NonNull
+    private String password;
 }

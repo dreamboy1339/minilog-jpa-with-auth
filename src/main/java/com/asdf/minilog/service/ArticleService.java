@@ -8,111 +8,112 @@ import com.asdf.minilog.exception.UserNotFoundException;
 import com.asdf.minilog.repository.ArticleRepository;
 import com.asdf.minilog.repository.UserRepository;
 import com.asdf.minilog.util.EntityDtoMapper;
-import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Isolation;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
+
 @Service
 @Transactional(isolation = Isolation.REPEATABLE_READ)
 public class ArticleService {
 
-  private final ArticleRepository articleRepository;
-  private final UserRepository userRepository;
+    private final ArticleRepository articleRepository;
+    private final UserRepository userRepository;
 
-  @Autowired
-  public ArticleService(ArticleRepository articleRepository, UserRepository userRepository) {
-    this.articleRepository = articleRepository;
-    this.userRepository = userRepository;
-  }
+    @Autowired
+    public ArticleService(ArticleRepository articleRepository, UserRepository userRepository) {
+        this.articleRepository = articleRepository;
+        this.userRepository = userRepository;
+    }
 
-  public ArticleResponseDto createArticle(String content, Long userId) {
-    User user =
-        userRepository
-            .findById(userId)
-            .orElseThrow(
-                () -> {
-                  String message = String.format("User with id %d not found", userId);
-                  return new UserNotFoundException(message);
-                });
+    public ArticleResponseDto createArticle(String content, Long userId) {
+        User user =
+            userRepository
+                .findById(userId)
+                .orElseThrow(
+                    () -> {
+                        String message = String.format("User with id %d not found", userId);
+                        return new UserNotFoundException(message);
+                    });
 
-    Article article = Article.builder().content(content).author(user).build();
+        Article article = Article.builder().content(content).author(user).build();
 
-    Article savedArticle = articleRepository.save(article);
-    return EntityDtoMapper.toDto(savedArticle);
-  }
+        Article savedArticle = articleRepository.save(article);
+        return EntityDtoMapper.toDto(savedArticle);
+    }
 
-  public void deleteArticle(Long articleId) {
-    Article article =
-        articleRepository
-            .findById(articleId)
-            .orElseThrow(
-                () -> {
-                  String message = String.format("Article with id %d not found", articleId);
-                  return new ArticleNotFoundException(message);
-                });
+    public void deleteArticle(Long articleId) {
+        Article article =
+            articleRepository
+                .findById(articleId)
+                .orElseThrow(
+                    () -> {
+                        String message = String.format("Article with id %d not found", articleId);
+                        return new ArticleNotFoundException(message);
+                    });
 
-    articleRepository.deleteById(articleId);
-  }
+        articleRepository.deleteById(articleId);
+    }
 
-  public ArticleResponseDto updateArticle(Long articleId, String content) {
-    Article article =
-        articleRepository
-            .findById(articleId)
-            .orElseThrow(
-                () -> {
-                  String message = String.format("Article with id %d not found", articleId);
-                  return new ArticleNotFoundException(message);
-                });
+    public ArticleResponseDto updateArticle(Long articleId, String content) {
+        Article article =
+            articleRepository
+                .findById(articleId)
+                .orElseThrow(
+                    () -> {
+                        String message = String.format("Article with id %d not found", articleId);
+                        return new ArticleNotFoundException(message);
+                    });
 
-    article.setContent(content);
+        article.setContent(content);
 
-    Article updatedArticle = articleRepository.save(article);
-    return EntityDtoMapper.toDto(updatedArticle);
-  }
+        Article updatedArticle = articleRepository.save(article);
+        return EntityDtoMapper.toDto(updatedArticle);
+    }
 
-  @Transactional(readOnly = true)
-  public ArticleResponseDto getArticleById(Long articleId) {
-    Article article =
-        articleRepository
-            .findById(articleId)
-            .orElseThrow(
-                () -> {
-                  String message = String.format("Article with id %d not found", articleId);
-                  return new ArticleNotFoundException(message);
-                });
+    @Transactional(readOnly = true)
+    public ArticleResponseDto getArticleById(Long articleId) {
+        Article article =
+            articleRepository
+                .findById(articleId)
+                .orElseThrow(
+                    () -> {
+                        String message = String.format("Article with id %d not found", articleId);
+                        return new ArticleNotFoundException(message);
+                    });
 
-    return EntityDtoMapper.toDto(article);
-  }
+        return EntityDtoMapper.toDto(article);
+    }
 
-  @Transactional(readOnly = true)
-  public List<ArticleResponseDto> getFeedListByFollowerId(Long userId) {
-    User user =
-        userRepository
-            .findById(userId)
-            .orElseThrow(
-                () -> {
-                  String message = String.format("User with id %d not found", userId);
-                  return new UserNotFoundException(message);
-                });
+    @Transactional(readOnly = true)
+    public List<ArticleResponseDto> getFeedListByFollowerId(Long userId) {
+        User user =
+            userRepository
+                .findById(userId)
+                .orElseThrow(
+                    () -> {
+                        String message = String.format("User with id %d not found", userId);
+                        return new UserNotFoundException(message);
+                    });
 
-    var feedList = articleRepository.findAllByFollowerId(user.getId());
-    return feedList.stream().map(EntityDtoMapper::toDto).toList();
-  }
+        var feedList = articleRepository.findAllByFollowerId(user.getId());
+        return feedList.stream().map(EntityDtoMapper::toDto).toList();
+    }
 
-  @Transactional(readOnly = true)
-  public List<ArticleResponseDto> getArticleListByUserId(Long userId) {
-    User user =
-        userRepository
-            .findById(userId)
-            .orElseThrow(
-                () -> {
-                  String message = String.format("User with id %d not found", userId);
-                  return new UserNotFoundException(message);
-                });
+    @Transactional(readOnly = true)
+    public List<ArticleResponseDto> getArticleListByUserId(Long userId) {
+        User user =
+            userRepository
+                .findById(userId)
+                .orElseThrow(
+                    () -> {
+                        String message = String.format("User with id %d not found", userId);
+                        return new UserNotFoundException(message);
+                    });
 
-    var articleList = articleRepository.findAllByAuthorId(user.getId());
-    return articleList.stream().map(EntityDtoMapper::toDto).toList();
-  }
+        var articleList = articleRepository.findAllByAuthorId(user.getId());
+        return articleList.stream().map(EntityDtoMapper::toDto).toList();
+    }
 }

@@ -6,7 +6,6 @@ import com.asdf.minilog.service.ArticleService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
-import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -19,71 +18,73 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.List;
+
 @RestController
 @RequestMapping("/api/v1/article")
 public class ArticleController {
 
-  private final ArticleService articleService;
+    private final ArticleService articleService;
 
-  @Autowired
-  public ArticleController(ArticleService articleService) {
-    this.articleService = articleService;
-  }
+    @Autowired
+    public ArticleController(ArticleService articleService) {
+        this.articleService = articleService;
+    }
 
-  @PostMapping
-  @Operation(summary = "Create a new article")
-  @ApiResponses({
-    @ApiResponse(responseCode = "200", description = "Article created successfully"),
-    @ApiResponse(responseCode = "404", description = "Article not found")
-  })
-  public ResponseEntity<ArticleResponseDto> createArticle(@RequestBody ArticleRequestDto article) {
-    Long userId = article.getAuthorId();
-    ArticleResponseDto createdArticle = articleService.createArticle(article.getContent(), userId);
-    return ResponseEntity.ok(createdArticle);
-  }
+    @PostMapping
+    @Operation(summary = "Create a new article")
+    @ApiResponses({
+        @ApiResponse(responseCode = "200", description = "Article created successfully"),
+        @ApiResponse(responseCode = "404", description = "Article not found")
+    })
+    public ResponseEntity<ArticleResponseDto> createArticle(@RequestBody ArticleRequestDto article) {
+        Long userId = article.getAuthorId();
+        ArticleResponseDto createdArticle = articleService.createArticle(article.getContent(), userId);
+        return ResponseEntity.ok(createdArticle);
+    }
 
-  @GetMapping("/{articleId}")
-  @Operation(summary = "Get article by id")
-  @ApiResponses({
-    @ApiResponse(responseCode = "200", description = "OK"),
-    @ApiResponse(responseCode = "404", description = "Article not found")
-  })
-  public ResponseEntity<ArticleResponseDto> getArticle(@PathVariable Long articleId) {
-    var article = articleService.getArticleById(articleId);
-    return ResponseEntity.ok(article);
-  }
+    @GetMapping("/{articleId}")
+    @Operation(summary = "Get article by id")
+    @ApiResponses({
+        @ApiResponse(responseCode = "200", description = "OK"),
+        @ApiResponse(responseCode = "404", description = "Article not found")
+    })
+    public ResponseEntity<ArticleResponseDto> getArticle(@PathVariable Long articleId) {
+        var article = articleService.getArticleById(articleId);
+        return ResponseEntity.ok(article);
+    }
 
-  @PutMapping("/{articleId}")
-  @Operation(summary = "Update article")
-  @ApiResponses({
-    @ApiResponse(responseCode = "200", description = "OK"),
-    @ApiResponse(responseCode = "404", description = "Article not found")
-  })
-  public ResponseEntity<ArticleResponseDto> updateArticle(
-      @PathVariable Long articleId, @RequestBody ArticleRequestDto article) {
-    var updatedArticle = articleService.updateArticle(articleId, article.getContent());
-    return ResponseEntity.ok(updatedArticle);
-  }
+    @PutMapping("/{articleId}")
+    @Operation(summary = "Update article")
+    @ApiResponses({
+        @ApiResponse(responseCode = "200", description = "OK"),
+        @ApiResponse(responseCode = "404", description = "Article not found")
+    })
+    public ResponseEntity<ArticleResponseDto> updateArticle(
+        @PathVariable Long articleId, @RequestBody ArticleRequestDto article) {
+        var updatedArticle = articleService.updateArticle(articleId, article.getContent());
+        return ResponseEntity.ok(updatedArticle);
+    }
 
-  @DeleteMapping("/{articleId}")
-  @Operation(summary = "Delete article")
-  @ApiResponses({
-    @ApiResponse(responseCode = "204", description = "OK"),
-    @ApiResponse(responseCode = "404", description = "Article not found")
-  })
-  public ResponseEntity<Void> deleteArticle(@PathVariable Long articleId) {
-    articleService.deleteArticle(articleId);
-    return ResponseEntity.noContent().build();
-  }
+    @DeleteMapping("/{articleId}")
+    @Operation(summary = "Delete article")
+    @ApiResponses({
+        @ApiResponse(responseCode = "204", description = "OK"),
+        @ApiResponse(responseCode = "404", description = "Article not found")
+    })
+    public ResponseEntity<Void> deleteArticle(@PathVariable Long articleId) {
+        articleService.deleteArticle(articleId);
+        return ResponseEntity.noContent().build();
+    }
 
-  @GetMapping
-  @Operation(summary = "Get articles by user id")
-  @ApiResponses({
-    @ApiResponse(responseCode = "200", description = "OK"),
-    @ApiResponse(responseCode = "404", description = "Article not found")
-  })
-  public ResponseEntity<List<ArticleResponseDto>> getArticleByUserId(@RequestParam Long authorId) {
-    var articles = articleService.getArticleListByUserId(authorId);
-    return ResponseEntity.ok(articles);
-  }
+    @GetMapping
+    @Operation(summary = "Get articles by user id")
+    @ApiResponses({
+        @ApiResponse(responseCode = "200", description = "OK"),
+        @ApiResponse(responseCode = "404", description = "Article not found")
+    })
+    public ResponseEntity<List<ArticleResponseDto>> getArticleByUserId(@RequestParam Long authorId) {
+        var articles = articleService.getArticleListByUserId(authorId);
+        return ResponseEntity.ok(articles);
+    }
 }
