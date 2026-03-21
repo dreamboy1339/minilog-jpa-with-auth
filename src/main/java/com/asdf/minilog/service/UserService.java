@@ -2,6 +2,7 @@ package com.asdf.minilog.service;
 
 import com.asdf.minilog.dto.UserRequestDto;
 import com.asdf.minilog.dto.UserResponseDto;
+import com.asdf.minilog.entity.Role;
 import com.asdf.minilog.entity.User;
 import com.asdf.minilog.exception.UserNotFoundException;
 import com.asdf.minilog.repository.UserRepository;
@@ -10,6 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -42,10 +44,21 @@ public class UserService {
             throw new IllegalArgumentException("User already exists");
         }
 
+        // grant ROLE_AUTHOR permission when creating a new user
+        HashSet<Role> roles = new HashSet<>();
+        roles.add(Role.ROLE_AUTHOR);
+
+        // NOTE: Do not THIS Real Project. it is just example for simplicity.
+        // grant ROLE_ADMIN permission when creating a new user who has a name 'admin'
+        if (userRequestDto.getUsername().equals("admin")) {
+            roles.add(Role.ROLE_ADMIN);
+        }
+
         User user =
             User.builder()
                 .userName(userRequestDto.getUsername())
                 .password(userRequestDto.getPassword())
+                .roles(roles)
                 .build();
 
         User savedUser = userRepository.save(user);
