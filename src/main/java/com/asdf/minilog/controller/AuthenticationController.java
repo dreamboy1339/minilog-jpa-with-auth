@@ -1,6 +1,7 @@
 package com.asdf.minilog.controller;
 
 import com.asdf.minilog.dto.AuthenticationRequestDto;
+import com.asdf.minilog.dto.AuthenticationResponseDto;
 import com.asdf.minilog.dto.UserResponseDto;
 import com.asdf.minilog.service.UserService;
 import com.asdf.minilog.util.JwtUtil;
@@ -55,10 +56,10 @@ public class AuthenticationController {
             UserDetails userDetails = userDetailsService.loadUserByUsername(authRequest.getUsername());
             UserResponseDto userResponseDto = userService.getUserByUsername(userDetails.getUsername());
             String jwtToken = jwtTokenUtil.generateToken(userDetails, userResponseDto.getId());
-            AuthenticationRequestDto authenticationRequestDto = AuthenticationRequestDto.builder()
+            AuthenticationResponseDto authenticationResponseDto = AuthenticationResponseDto.builder()
                 .jwt(jwtToken)
                 .build();
-            return ResponseEntity.ok(authenticationRequestDto);
+            return ResponseEntity.ok(authenticationResponseDto);
         } catch (BadCredentialsException e) {
             logger.error("Authentication failed: {}", e.getMessage());
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Invalid credentials");
