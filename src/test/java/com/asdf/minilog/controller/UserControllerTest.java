@@ -3,6 +3,7 @@ package com.asdf.minilog.controller;
 import com.asdf.minilog.dto.UserRequestDto;
 import com.asdf.minilog.dto.UserResponseDto;
 import com.asdf.minilog.exception.UserNotFoundException;
+import com.asdf.minilog.security.MinilogUserDetails;
 import com.asdf.minilog.service.UserService;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.BeforeEach;
@@ -106,7 +107,8 @@ public class UserControllerTest {
             UserRequestDto.builder().username("Test User").password("password").build();
         UserResponseDto userResponseDto =
             UserResponseDto.builder().id(1L).username("Test User").build();
-        when(userService.updateUser(anyLong(), any(UserRequestDto.class))).thenReturn(userResponseDto);
+        when(userService.updateUser(any(MinilogUserDetails.class), anyLong(), any(UserRequestDto.class)))
+            .thenReturn(userResponseDto);
 
         mockMvc
             .perform(
