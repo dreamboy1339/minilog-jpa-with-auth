@@ -4,8 +4,10 @@ import com.asdf.minilog.dto.UserRequestDto;
 import com.asdf.minilog.dto.UserResponseDto;
 import com.asdf.minilog.entity.Role;
 import com.asdf.minilog.entity.User;
+import com.asdf.minilog.exception.NotAuthorizedException;
 import com.asdf.minilog.exception.UserNotFoundException;
 import com.asdf.minilog.repository.UserRepository;
+import com.asdf.minilog.security.MinilogUserDetails;
 import com.asdf.minilog.util.EntityDtoMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -65,7 +67,17 @@ public class UserService {
         return EntityDtoMapper.toDto(savedUser);
     }
 
-    public UserResponseDto updateUser(Long userId, UserRequestDto userRequestDto) {
+    public UserResponseDto updateUser(
+        MinilogUserDetails userDetails,
+        Long userId,
+        UserRequestDto userRequestDto
+    ) {
+        var isUserMatchedAdmin = userDetails.getAuthorities().stream()
+            .anyMatch(authority -> authority.getAuthority().equals(Role.ROLE_ADMIN.name()));
+        if (!isUserMatchedAdmin && !userDetails.getId().equals(userId)) {
+            throw new NotAuthorizedException("You are not authorized to update this user");
+        }
+
         User user =
             userRepository
                 .findById(userId)
@@ -81,6 +93,17 @@ public class UserService {
         return EntityDtoMapper.toDto(updatedUser);
     }
 
+    public UserResponseDto getUserByUsername(String username) {
+        return userRepository
+            .findByUserName(username)
+            .map(EntityDtoMapper::toDto)
+            .orElseThrow(
+                () -> {
+                    String message = String.format("User with username %s not found", username);
+                    return new UserNotFoundException(message);
+                });
+    }
+
     public void deleteUser(Long userId) {
         User user =
             userRepository
@@ -93,7 +116,4 @@ public class UserService {
         userRepository.deleteById(user.getId());
     }
 
-    public UserResponseDto getUserByUsername(String username) {
-        return null;
-    }
 }
