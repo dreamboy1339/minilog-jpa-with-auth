@@ -146,7 +146,7 @@ public class ArticleServiceTest {
     void testDeleteArticle() {
         assertThat(articleRepository.findAll().size()).isEqualTo(2);
         Long articleId = article1.getId(); // Adjusted to match the method signature
-        articleService.deleteArticle(articleId);
+        articleService.deleteArticle(article1.getAuthor().getId(), articleId);
 
         assertThat(articleRepository.findAll().size()).isEqualTo(1);
     }
@@ -155,7 +155,8 @@ public class ArticleServiceTest {
     @Transactional
     void testUpdateArticle() {
         Long articleId = article1.getId(); // Adjusted to match the method signature
-        ArticleResponseDto article = articleService.updateArticle(articleId, "updated article 1");
+        Long authorId = article1.getAuthor().getId();
+        ArticleResponseDto article = articleService.updateArticle(authorId, articleId, "updated article 1");
 
         assertThat(article.getArticleId()).isEqualTo(article1.getId());
         assertThat(article.getContent()).isEqualTo("updated article 1");

@@ -115,7 +115,7 @@ public class ArticleControllerTest {
                 .authorName("Test User")
                 .createdAt(fixtureDateTime)
                 .build();
-        when(articleService.updateArticle(anyLong(), any(String.class))).thenReturn(responseDto);
+        when(articleService.updateArticle(anyLong(), anyLong(), any(String.class))).thenReturn(responseDto);
 
         mockMvc
             .perform(

@@ -4,6 +4,7 @@ import com.asdf.minilog.dto.ArticleResponseDto;
 import com.asdf.minilog.entity.Article;
 import com.asdf.minilog.entity.User;
 import com.asdf.minilog.exception.ArticleNotFoundException;
+import com.asdf.minilog.exception.NotAuthorizedException;
 import com.asdf.minilog.exception.UserNotFoundException;
 import com.asdf.minilog.repository.ArticleRepository;
 import com.asdf.minilog.repository.UserRepository;
@@ -44,7 +45,7 @@ public class ArticleService {
         return EntityDtoMapper.toDto(savedArticle);
     }
 
-    public void deleteArticle(Long articleId) {
+    public void deleteArticle(Long authorId, Long articleId) {
         Article article =
             articleRepository
                 .findById(articleId)
@@ -53,11 +54,15 @@ public class ArticleService {
                         String message = String.format("Article with id %d not found", articleId);
                         return new ArticleNotFoundException(message);
                     });
+
+        if (!article.getAuthor().getId().equals(authorId)) {
+            throw new NotAuthorizedException("You are not authorized to delete this article");
+        }
 
         articleRepository.deleteById(articleId);
     }
 
-    public ArticleResponseDto updateArticle(Long articleId, String content) {
+    public ArticleResponseDto updateArticle(Long authorId, Long articleId, String content) {
         Article article =
             articleRepository
                 .findById(articleId)
@@ -66,6 +71,10 @@ public class ArticleService {
                         String message = String.format("Article with id %d not found", articleId);
                         return new ArticleNotFoundException(message);
                     });
+
+        if (!article.getAuthor().getId().equals(authorId)) {
+            throw new NotAuthorizedException("You are not authorized to update this article");
+        }
 
         article.setContent(content);
 
