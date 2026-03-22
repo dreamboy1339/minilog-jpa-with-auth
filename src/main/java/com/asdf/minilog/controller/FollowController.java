@@ -5,6 +5,7 @@ import com.asdf.minilog.dto.FollowResponseDto;
 import com.asdf.minilog.security.MinilogUserDetails;
 import com.asdf.minilog.service.FollowService;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import java.util.List;
@@ -37,7 +38,7 @@ public class FollowController {
     @ApiResponse(responseCode = "404", description = "User not found")
   })
   public ResponseEntity<FollowResponseDto> follow(
-      @AuthenticationPrincipal MinilogUserDetails userDetails,
+      @Parameter(hidden = true) @AuthenticationPrincipal MinilogUserDetails userDetails,
       @RequestBody FollowRequestDto request) {
     Long followerId = userDetails.getId();
     Long followingId = request.getFolloweeId();
@@ -52,7 +53,7 @@ public class FollowController {
     @ApiResponse(responseCode = "404", description = "User not found")
   })
   public ResponseEntity<Void> unfollow(
-      @AuthenticationPrincipal MinilogUserDetails userDetails,
+      @Parameter(hidden = true) @AuthenticationPrincipal MinilogUserDetails userDetails,
       @PathVariable Long followeeId) {
     followService.unfollow(userDetails.getId(), followeeId);
     return ResponseEntity.ok().build();

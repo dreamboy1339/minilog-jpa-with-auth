@@ -5,6 +5,7 @@ import com.asdf.minilog.dto.UserResponseDto;
 import com.asdf.minilog.security.MinilogUserDetails;
 import com.asdf.minilog.service.UserService;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -66,7 +67,7 @@ public class UserController {
     @ApiResponse(responseCode = "404", description = "User not found")
   })
   public ResponseEntity<UserResponseDto> updateUser(
-      @AuthenticationPrincipal MinilogUserDetails userDetails,
+      @Parameter(hidden = true) @AuthenticationPrincipal MinilogUserDetails userDetails,
       @PathVariable Long userId,
       @RequestBody UserRequestDto updatedUser) {
     UserResponseDto user = userService.updateUser(userDetails, userId, updatedUser);

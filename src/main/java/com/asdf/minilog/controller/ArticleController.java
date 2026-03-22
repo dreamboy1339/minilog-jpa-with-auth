@@ -5,6 +5,7 @@ import com.asdf.minilog.dto.ArticleResponseDto;
 import com.asdf.minilog.security.MinilogUserDetails;
 import com.asdf.minilog.service.ArticleService;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import java.util.List;
@@ -39,7 +40,7 @@ public class ArticleController {
     @ApiResponse(responseCode = "404", description = "Article not found")
   })
   public ResponseEntity<ArticleResponseDto> createArticle(
-      @AuthenticationPrincipal MinilogUserDetails userDetails,
+      @Parameter(hidden = true) @AuthenticationPrincipal MinilogUserDetails userDetails,
       @RequestBody ArticleRequestDto article) {
     ArticleResponseDto createdArticle =
         articleService.createArticle(article.getContent(), userDetails.getId());
@@ -64,7 +65,7 @@ public class ArticleController {
     @ApiResponse(responseCode = "404", description = "Article not found")
   })
   public ResponseEntity<ArticleResponseDto> updateArticle(
-      @AuthenticationPrincipal MinilogUserDetails userDetails,
+      @Parameter(hidden = true) @AuthenticationPrincipal MinilogUserDetails userDetails,
       @PathVariable Long articleId,
       @RequestBody ArticleRequestDto article) {
     var updatedArticle =
@@ -79,7 +80,8 @@ public class ArticleController {
     @ApiResponse(responseCode = "404", description = "Article not found")
   })
   public ResponseEntity<Void> deleteArticle(
-      @AuthenticationPrincipal MinilogUserDetails userDetails, @PathVariable Long articleId) {
+      @Parameter(hidden = true) @AuthenticationPrincipal MinilogUserDetails userDetails,
+      @PathVariable Long articleId) {
     articleService.deleteArticle(userDetails.getId(), articleId);
     return ResponseEntity.noContent().build();
   }
