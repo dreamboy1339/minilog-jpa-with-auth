@@ -9,16 +9,14 @@ import lombok.NonNull;
 @Builder
 public class ArticleRequestDto {
 
-    @NonNull
-    private String content;
+  @NonNull private String content;
 
-    @Deprecated(since = "2.0", forRemoval = true)
-    @Schema(
-        description = "The ID of the author who created the article",
-        example = "1",
-        required = true,
-        deprecated = true
-    )
-    @NonNull
-    private Long authorId;
+  @Deprecated(since = "2.0", forRemoval = true)
+  @Schema(
+      description = "The ID of the author who created the article",
+      example = "1",
+      required = true,
+      deprecated = true)
+  @NonNull
+  private Long authorId;
 }

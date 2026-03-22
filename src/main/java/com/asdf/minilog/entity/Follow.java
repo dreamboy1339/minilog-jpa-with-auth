@@ -21,8 +21,8 @@ import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 @Table(
     name = "follows",
     indexes = {
-        @Index(name = "idx_follower_id", columnList = "follower_id"),
-        @Index(name = "idx_followee_id", columnList = "followee_id")
+      @Index(name = "idx_follower_id", columnList = "follower_id"),
+      @Index(name = "idx_followee_id", columnList = "followee_id")
     },
     uniqueConstraints = {@UniqueConstraint(columnNames = {"follower_id", "followee_id"})})
 @EntityListeners(AuditingEntityListener.class)
@@ -32,15 +32,15 @@ import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 @NoArgsConstructor
 public class Follow {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+  @Id
+  @GeneratedValue(strategy = GenerationType.IDENTITY)
+  private Long id;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "follower_id", nullable = false)
-    private User follower;
+  @ManyToOne(fetch = FetchType.LAZY)
+  @JoinColumn(name = "follower_id", nullable = false)
+  private User follower;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "followee_id", nullable = false)
-    private User followee;
+  @ManyToOne(fetch = FetchType.LAZY)
+  @JoinColumn(name = "followee_id", nullable = false)
+  private User followee;
 }

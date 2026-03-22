@@ -10,41 +10,41 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 @ControllerAdvice
 public class GlobalExceptionHandler {
 
-    @ApiResponses(
-        value = {
-            @ApiResponse(responseCode = "404", description = "User not found"),
-            @ApiResponse(responseCode = "400", description = "Bad request"),
-            @ApiResponse(responseCode = "500", description = "Internal server error")
-        })
-    @ExceptionHandler(UserNotFoundException.class)
-    public ResponseEntity<String> handleUserNotFoundException(UserNotFoundException exception) {
-        return new ResponseEntity<>(exception.getMessage(), HttpStatus.NOT_FOUND);
-    }
+  @ApiResponses(
+      value = {
+        @ApiResponse(responseCode = "404", description = "User not found"),
+        @ApiResponse(responseCode = "400", description = "Bad request"),
+        @ApiResponse(responseCode = "500", description = "Internal server error")
+      })
+  @ExceptionHandler(UserNotFoundException.class)
+  public ResponseEntity<String> handleUserNotFoundException(UserNotFoundException exception) {
+    return new ResponseEntity<>(exception.getMessage(), HttpStatus.NOT_FOUND);
+  }
 
-    @ApiResponses(
-        value = {
-            @ApiResponse(responseCode = "404", description = "Article not found"),
-            @ApiResponse(responseCode = "400", description = "Bad request"),
-            @ApiResponse(responseCode = "500", description = "Internal server error")
-        })
-    @ExceptionHandler(ArticleNotFoundException.class)
-    public ResponseEntity<String> handleArticleNotFoundException(ArticleNotFoundException exception) {
-        return new ResponseEntity<>(exception.getMessage(), HttpStatus.NOT_FOUND);
-    }
+  @ApiResponses(
+      value = {
+        @ApiResponse(responseCode = "404", description = "Article not found"),
+        @ApiResponse(responseCode = "400", description = "Bad request"),
+        @ApiResponse(responseCode = "500", description = "Internal server error")
+      })
+  @ExceptionHandler(ArticleNotFoundException.class)
+  public ResponseEntity<String> handleArticleNotFoundException(ArticleNotFoundException exception) {
+    return new ResponseEntity<>(exception.getMessage(), HttpStatus.NOT_FOUND);
+  }
 
-    @ApiResponses(
-        value = {
-            @ApiResponse(responseCode = "400", description = "Bad request"),
-            @ApiResponse(responseCode = "500", description = "Internal server error")
-        })
-    @ExceptionHandler(IllegalArgumentException.class)
-    public ResponseEntity<String> handleIllegalArgumentException(IllegalArgumentException exception) {
-        return new ResponseEntity<>(exception.getMessage(), HttpStatus.BAD_REQUEST);
-    }
+  @ApiResponses(
+      value = {
+        @ApiResponse(responseCode = "400", description = "Bad request"),
+        @ApiResponse(responseCode = "500", description = "Internal server error")
+      })
+  @ExceptionHandler(IllegalArgumentException.class)
+  public ResponseEntity<String> handleIllegalArgumentException(IllegalArgumentException exception) {
+    return new ResponseEntity<>(exception.getMessage(), HttpStatus.BAD_REQUEST);
+  }
 
-    @ApiResponses(value = {@ApiResponse(responseCode = "500", description = "Internal server error")})
-    @ExceptionHandler(Exception.class)
-    public ResponseEntity<String> handleException(Exception exception) {
-        return new ResponseEntity<>(exception.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
-    }
+  @ApiResponses(value = {@ApiResponse(responseCode = "500", description = "Internal server error")})
+  @ExceptionHandler(Exception.class)
+  public ResponseEntity<String> handleException(Exception exception) {
+    return new ResponseEntity<>(exception.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
+  }
 }

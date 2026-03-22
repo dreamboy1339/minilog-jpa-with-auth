@@ -23,48 +23,45 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequestMapping("/api/v2/auth")
 public class AuthenticationController {
-    private static final Logger logger = LoggerFactory.getLogger(AuthenticationController.class);
+  private static final Logger logger = LoggerFactory.getLogger(AuthenticationController.class);
 
-    private AuthenticationManager authenticationManager;
-    private JwtUtil jwtTokenUtil;
-    private UserDetailsService userDetailsService;
-    private UserService userService;
+  private AuthenticationManager authenticationManager;
+  private JwtUtil jwtTokenUtil;
+  private UserDetailsService userDetailsService;
+  private UserService userService;
 
-    @Autowired
-    public AuthenticationController(
-        AuthenticationManager authenticationManager,
-        JwtUtil jwtTokenUtil,
-        UserDetailsService userDetailsService,
-        UserService userService
-    ) {
-        this.authenticationManager = authenticationManager;
-        this.jwtTokenUtil = jwtTokenUtil;
-        this.userDetailsService = userDetailsService;
-        this.userService = userService;
+  @Autowired
+  public AuthenticationController(
+      AuthenticationManager authenticationManager,
+      JwtUtil jwtTokenUtil,
+      UserDetailsService userDetailsService,
+      UserService userService) {
+    this.authenticationManager = authenticationManager;
+    this.jwtTokenUtil = jwtTokenUtil;
+    this.userDetailsService = userDetailsService;
+    this.userService = userService;
+  }
+
+  @PostMapping("/login")
+  public ResponseEntity<?> createAuthenticationToken(
+      @RequestBody AuthenticationRequestDto authRequest) {
+    try {
+      UsernamePasswordAuthenticationToken authenticationToken =
+          new UsernamePasswordAuthenticationToken(
+              authRequest.getUsername(), authRequest.getPassword());
+      authenticationManager.authenticate(authenticationToken);
+      UserDetails userDetails = userDetailsService.loadUserByUsername(authRequest.getUsername());
+      UserResponseDto userResponseDto = userService.getUserByUsername(userDetails.getUsername());
+      String jwtToken = jwtTokenUtil.generateToken(userDetails, userResponseDto.getId());
+      AuthenticationResponseDto authenticationResponseDto =
+          AuthenticationResponseDto.builder().jwt(jwtToken).build();
+      return ResponseEntity.ok(authenticationResponseDto);
+    } catch (BadCredentialsException e) {
+      logger.error("Authentication failed: {}", e.getMessage());
+      return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Invalid credentials");
+    } catch (Exception e) {
+      return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+          .body("An error occurred during authentication");
     }
-
-    @PostMapping("/login")
-    public ResponseEntity<?> createAuthenticationToken(
-        @RequestBody AuthenticationRequestDto authRequest
-    ) {
-        try {
-            UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(
-                authRequest.getUsername(),
-                authRequest.getPassword()
-            );
-            authenticationManager.authenticate(authenticationToken);
-            UserDetails userDetails = userDetailsService.loadUserByUsername(authRequest.getUsername());
-            UserResponseDto userResponseDto = userService.getUserByUsername(userDetails.getUsername());
-            String jwtToken = jwtTokenUtil.generateToken(userDetails, userResponseDto.getId());
-            AuthenticationResponseDto authenticationResponseDto = AuthenticationResponseDto.builder()
-                .jwt(jwtToken)
-                .build();
-            return ResponseEntity.ok(authenticationResponseDto);
-        } catch (BadCredentialsException e) {
-            logger.error("Authentication failed: {}", e.getMessage());
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Invalid credentials");
-        } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("An error occurred during authentication");
-        }
-    }
+  }
 }

@@ -24,65 +24,64 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/api/v2/user")
 public class UserController {
 
-    private final UserService userService;
+  private final UserService userService;
 
-    @Autowired
-    public UserController(UserService userService) {
-        this.userService = userService;
-    }
+  @Autowired
+  public UserController(UserService userService) {
+    this.userService = userService;
+  }
 
-    @GetMapping
-    @Operation(summary = "Get all users")
-    @ApiResponses({@ApiResponse(responseCode = "200", description = "OK")})
-    public ResponseEntity<Iterable<UserResponseDto>> getUsers() {
-        return ResponseEntity.ok(userService.getUsers());
-    }
+  @GetMapping
+  @Operation(summary = "Get all users")
+  @ApiResponses({@ApiResponse(responseCode = "200", description = "OK")})
+  public ResponseEntity<Iterable<UserResponseDto>> getUsers() {
+    return ResponseEntity.ok(userService.getUsers());
+  }
 
-    @GetMapping("/{userId}")
-    @Operation(summary = "Get user by id")
-    @ApiResponses({
-        @ApiResponse(responseCode = "200", description = "OK"),
-        @ApiResponse(responseCode = "404", description = "User not found")
-    })
-    public ResponseEntity<UserResponseDto> getUserById(@PathVariable Long userId) {
-        return userService
-            .getUserById(userId)
-            .map(ResponseEntity::ok)
-            .orElseGet(() -> ResponseEntity.notFound().build());
-    }
+  @GetMapping("/{userId}")
+  @Operation(summary = "Get user by id")
+  @ApiResponses({
+    @ApiResponse(responseCode = "200", description = "OK"),
+    @ApiResponse(responseCode = "404", description = "User not found")
+  })
+  public ResponseEntity<UserResponseDto> getUserById(@PathVariable Long userId) {
+    return userService
+        .getUserById(userId)
+        .map(ResponseEntity::ok)
+        .orElseGet(() -> ResponseEntity.notFound().build());
+  }
 
-    @PostMapping
-    @Operation(summary = "Create user")
-    @ApiResponses({@ApiResponse(responseCode = "201", description = "Created")})
-    public ResponseEntity<UserResponseDto> createUser(@RequestBody UserRequestDto user) {
-        UserResponseDto createdUser = userService.createUser(user);
-        return ResponseEntity.ok(createdUser);
-    }
+  @PostMapping
+  @Operation(summary = "Create user")
+  @ApiResponses({@ApiResponse(responseCode = "201", description = "Created")})
+  public ResponseEntity<UserResponseDto> createUser(@RequestBody UserRequestDto user) {
+    UserResponseDto createdUser = userService.createUser(user);
+    return ResponseEntity.ok(createdUser);
+  }
 
-    @PutMapping("/{userId}")
-    @Operation(summary = "Update user")
-    @ApiResponses({
-        @ApiResponse(responseCode = "200", description = "OK"),
-        @ApiResponse(responseCode = "404", description = "User not found")
-    })
-    public ResponseEntity<UserResponseDto> updateUser(
-        @AuthenticationPrincipal MinilogUserDetails userDetails,
-        @PathVariable Long userId,
-        @RequestBody UserRequestDto updatedUser
-    ) {
-        UserResponseDto user = userService.updateUser(userDetails, userId, updatedUser);
-        return ResponseEntity.ok(user);
-    }
+  @PutMapping("/{userId}")
+  @Operation(summary = "Update user")
+  @ApiResponses({
+    @ApiResponse(responseCode = "200", description = "OK"),
+    @ApiResponse(responseCode = "404", description = "User not found")
+  })
+  public ResponseEntity<UserResponseDto> updateUser(
+      @AuthenticationPrincipal MinilogUserDetails userDetails,
+      @PathVariable Long userId,
+      @RequestBody UserRequestDto updatedUser) {
+    UserResponseDto user = userService.updateUser(userDetails, userId, updatedUser);
+    return ResponseEntity.ok(user);
+  }
 
-    @PreAuthorize("hasRole('ADMIN')") // Only admins can delete users
-    @DeleteMapping("/{userId}")
-    @Operation(summary = "Delete user")
-    @ApiResponses({
-        @ApiResponse(responseCode = "204", description = "OK"),
-        @ApiResponse(responseCode = "404", description = "No content")
-    })
-    public ResponseEntity<Void> deleteUser(@PathVariable Long userId) {
-        userService.deleteUser(userId);
-        return ResponseEntity.noContent().build();
-    }
+  @PreAuthorize("hasRole('ADMIN')") // Only admins can delete users
+  @DeleteMapping("/{userId}")
+  @Operation(summary = "Delete user")
+  @ApiResponses({
+    @ApiResponse(responseCode = "204", description = "OK"),
+    @ApiResponse(responseCode = "404", description = "No content")
+  })
+  public ResponseEntity<Void> deleteUser(@PathVariable Long userId) {
+    userService.deleteUser(userId);
+    return ResponseEntity.noContent().build();
+  }
 }
