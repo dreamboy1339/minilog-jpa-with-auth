@@ -51,7 +51,7 @@ public class SecurityConfig {
         .authorizeHttpRequests(
             (requests) ->
                 requests
-                    .requestMatchers("/api/v2/auth/login", "/swagger-ui/**", "v3/api-docs/**")
+                    .requestMatchers("/api/v2/auth/login", "/swagger-ui/**", "/v3/api-docs/**")
                     .permitAll()
                     // 사용자 생성, 조회는 인증 없이 가능하도록 조치.
                     .requestMatchers(HttpMethod.POST, "/api/v2/user")
