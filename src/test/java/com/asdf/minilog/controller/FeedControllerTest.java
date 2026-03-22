@@ -38,12 +38,13 @@ public class FeedControllerTest {
   @MockitoBean JpaMetamodelMappingContext jpaMetamodelMappingContext;
   @MockitoBean private JwtUtil jwtUtil;
 
-  private LocalDateTime fixtureDateTime = LocalDateTime.of(2025, 1, 1, 0, 0, 0);
-  private DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss");
-  private String formattedFixtureDateTime = fixtureDateTime.format(formatter);
+  private final LocalDateTime fixtureDateTime = LocalDateTime.of(2025, 1, 1, 0, 0, 0);
+  private final DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss");
+  private final String formattedFixtureDateTime = fixtureDateTime.format(formatter);
 
   @BeforeEach
   public void setup() {
+    //noinspection resource
     MockitoAnnotations.openMocks(this);
   }
 

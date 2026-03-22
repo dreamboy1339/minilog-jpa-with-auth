@@ -46,10 +46,11 @@ public class UserControllerTest {
   @MockitoBean JpaMetamodelMappingContext jpaMetamodelMappingContext;
   @MockitoBean private JwtUtil jwtUtil;
 
-  private ObjectMapper objectMapper = new ObjectMapper();
+  private final ObjectMapper objectMapper = new ObjectMapper();
 
   @BeforeEach
   public void setup() {
+    //noinspection resource
     MockitoAnnotations.openMocks(this);
 
     // set mock user authentication

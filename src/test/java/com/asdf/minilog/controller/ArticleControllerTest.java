@@ -48,7 +48,7 @@ public class ArticleControllerTest {
   @MockitoBean JpaMetamodelMappingContext jpaMetamodelMappingContext;
   @MockitoBean private JwtUtil jwtUtil;
 
-  private ObjectMapper objectMapper = new ObjectMapper();
+  private final ObjectMapper objectMapper = new ObjectMapper();
 
   LocalDateTime fixtureDateTime = LocalDateTime.of(2025, 1, 1, 0, 0, 0);
   DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss");
@@ -56,6 +56,7 @@ public class ArticleControllerTest {
 
   @BeforeEach
   public void setup() {
+    //noinspection resource
     MockitoAnnotations.openMocks(this);
 
     // set mock user authentication
@@ -68,8 +69,7 @@ public class ArticleControllerTest {
 
   @Test
   public void testCreateArticle() throws Exception {
-    ArticleRequestDto requestDto =
-        ArticleRequestDto.builder().authorId(1L).content("Test Content").build();
+    ArticleRequestDto requestDto = ArticleRequestDto.builder().content("Test Content").build();
     ArticleResponseDto responseDto =
         ArticleResponseDto.builder()
             .articleId(1L)
@@ -119,8 +119,7 @@ public class ArticleControllerTest {
 
   @Test
   public void testUpdateArticle() throws Exception {
-    ArticleRequestDto requestDto =
-        ArticleRequestDto.builder().authorId(1L).content("Test Content").build();
+    ArticleRequestDto requestDto = ArticleRequestDto.builder().content("Test Content").build();
     ArticleResponseDto responseDto =
         ArticleResponseDto.builder()
             .articleId(1L)
