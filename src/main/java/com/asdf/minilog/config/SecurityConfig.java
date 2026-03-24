@@ -80,7 +80,7 @@ public class SecurityConfig {
         // CSRF 보호를 비활성화 (JWT 기반 인증은 STATELESS이므로 CSRF 토큰이 불필요)
         .csrf(AbstractHttpConfigurer::disable)
         // URL 별 접근 권한 규칙을 설정
-      .authorizeHttpRequests(
+        .authorizeHttpRequests(
             (requests) ->
                 requests
                     // 로그인 API, Swagger UI, API 문서 경로는 인증 없이 접근 허용
